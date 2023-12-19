@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+
+        {
+            "name": "Flutter Web",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--web-port",
+                "5000" // Change this port if your server runs on a different port
+            ],
+            "cwd": "${workspaceFolder}",
+            "program": "lib/main.dart" // Adjust the path if your entry point differs
+        }
+    ]
+}
