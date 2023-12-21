@@ -4,14 +4,16 @@ import 'widgets/world_map.dart';
 import 'widgets/ocean_wave.dart';
 import 'profile_page.dart';
 import 'settings_page.dart';
-import 'meditation_page.dart';
+import 'widgets/meditations.dart'; // Updated import for MeditationsPage
 import 'games_page.dart';
 import 'progress_tracker_page.dart';
 import 'guided_journals_page.dart';
 import 'parental_controls_page.dart';
 import 'educational_content_page.dart';
 import 'widgets/animal.dart';
-import 'widgets/animal_actions.dart'; // Import your AnimalActions file
+import 'widgets/sleep.dart';
+import 'widgets/eat.dart';
+import 'widgets/meditations/meditation1.dart'; // Import Meditation1Page
 
 void main() => runApp(const MyApp());
 
@@ -28,8 +30,8 @@ class MyApp extends StatelessWidget {
         '/ocean_waves': (context) => const OceanWave(),
         '/profile': (context) => const ProfilePage(),
         '/settings': (context) => const SettingsPage(),
-        '/meditation': (context) => const MeditationPage(),
         '/games': (context) => const GamesPage(),
+        '/meditations': (context) => const MeditationsPage(),
         '/progress_tracker': (context) => const ProgressTrackerPage(),
         '/guided_journals': (context) => const GuidedJournalsPage(),
         '/parental_controls': (context) => const ParentalControlsPage(),
@@ -40,7 +42,22 @@ class MyApp extends StatelessWidget {
           final animalName = args['animalName'] as String;
           return AnimalPage(animalName: animalName);
         },
-        // Add more routes as needed
+        '/sleep': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          final animalName = args['animalName'] as String;
+          return SleepPage(animalName: animalName);
+        },
+        '/eat': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments
+              as Map<String, dynamic>;
+          final animalName = args['animalName'] as String;
+          return EatPage(animalName: animalName);
+        },
+        // Add the route for Meditation 1
+        '/meditation_1': (context) => const Meditation1Page(),
+        // Add more routes as needed for other meditations
+        // '/meditation_2': (context) => const Meditation2Page(),
       },
     );
   }

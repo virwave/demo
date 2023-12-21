@@ -51,3 +51,5 @@ flutter:
     - assets\images\animals\animal\axolotl.png
     - assets\images\icons\sleep.png
     - assets/images/icons/smile.png
+    - assets/images/animals/sleep/axolotl_sleep.png
+    - assets/images/animals/eat/axolotl_eat.png

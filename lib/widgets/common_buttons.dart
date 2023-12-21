@@ -26,7 +26,10 @@ class CommonButtons extends StatelessWidget {
               height: 90,
             ),
             onPressed: () {
-              // Action when logo icon is pressed
+              Navigator.pushNamed(
+                context,
+                '/meditations', // Route to the MeditationsPage
+              );
             },
           ),
         ),
@@ -38,7 +41,12 @@ class CommonButtons extends StatelessWidget {
               Icons.home,
               size: 90,
             ),
-            onPressed: onHomePressed,
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                '/home', // Navigate to the WorldMap page
+              );
+            },
           ),
         ),
         Positioned(
@@ -49,7 +57,35 @@ class CommonButtons extends StatelessWidget {
               Icons.settings,
               size: 90,
             ),
-            onPressed: onSettingsPressed,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Settings'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          // Add your settings widgets here
+                          // Example:
+                          Text('Setting 1'),
+                          Text('Setting 2'),
+                          // Add more settings widgets as needed
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('Close'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ),
         Positioned(

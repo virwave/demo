@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'common_buttons.dart';
-import 'settings.dart';
 
-// Import AnimalPage
 class WorldMap extends StatelessWidget {
   const WorldMap({Key? key}) : super(key: key);
 
@@ -31,16 +29,36 @@ class WorldMap extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // World Map or Background Image
+          // GestureDetector for the world map, excluding specific animal areas
           GestureDetector(
             onTap: () {
-              navigateToAnimalPage(context, 'Axolotl');
+              // Add logic if needed for tapping on the world map
             },
-            child: Image.asset(
-              'assets/images/animal_map.jpg', // Replace with your world map image asset path
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
+            child: Stack(
+              children: [
+                Image.asset(
+                  'assets/images/animal_map.jpg',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
+                // Other animal images positioned on the screen
+                Positioned(
+                  left: MediaQuery.of(context).size.width * 0.25 - 45,
+                  top: MediaQuery.of(context).size.height * 0.5 - 45,
+                  child: GestureDetector(
+                    onTap: () {
+                      navigateToAnimalPage(context, 'Axolotl');
+                    },
+                    child: Image.asset(
+                      'assets/images/animals/animal/axolotl.png',
+                      width: 90,
+                      height: 90,
+                    ),
+                  ),
+                ),
+                // Add more animal images as needed
+              ],
             ),
           ),
           // Common Buttons Positioned on the screen
@@ -48,21 +66,6 @@ class WorldMap extends StatelessWidget {
             onHomePressed: () => onHomePressed(context),
             onSettingsPressed: () => onSettingsPressed(context),
             onHeartPressed: () => onHeartPressed(context),
-          ),
-          // Axolotl Image Positioned 25% from the left
-          Positioned(
-            left: MediaQuery.of(context).size.width * 0.25 - 45,
-            top: MediaQuery.of(context).size.height * 0.5 - 45,
-            child: GestureDetector(
-              onTap: () {
-                navigateToAnimalPage(context, 'Axolotl');
-              },
-              child: Image.asset(
-                'assets/images/animals/animal/axolotl.png',
-                width: 90,
-                height: 90,
-              ),
-            ),
           ),
         ],
       ),
