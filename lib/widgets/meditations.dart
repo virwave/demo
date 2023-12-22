@@ -4,14 +4,77 @@ import 'meditations_data.dart'; // Import the meditations data file
 class MeditationsPage extends StatelessWidget {
   const MeditationsPage({Key? key}) : super(key: key);
 
-  void navigateToMeditation(BuildContext context, int meditationId) {
-    Navigator.pushNamed(context, '/meditation_$meditationId');
+  void showDurationSelection(BuildContext context, int meditationId) {
+    Duration selectedDuration = const Duration(seconds: 5); // Initial value
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Duration'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Slider(
+                    min: 5,
+                    max: 8 * 60, // 8 minutes in seconds
+                    value: selectedDuration.inSeconds.toDouble(),
+                    onChanged: (double value) {
+                      setState(() {
+                        selectedDuration = Duration(seconds: value.toInt());
+                      });
+                    },
+                    divisions: ((8 * 60) - 5).toInt(),
+                    label:
+                        '${selectedDuration.inMinutes}:${selectedDuration.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Close the dialog
+                      navigateToMeditation(
+                          context, meditationId, selectedDuration);
+                    },
+                    child: Text('Next'),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  void navigateToMeditation(
+      BuildContext context, int meditationId, Duration duration) {
+    switch (meditationId) {
+      case 1:
+        Navigator.pushNamed(
+          context,
+          '/meditation1',
+          arguments: duration, // Pass duration as an argument if needed
+        );
+        break;
+      case 2:
+        Navigator.pushNamed(
+          context,
+          '/meditation2',
+          arguments: duration, // Pass duration as an argument if needed
+        );
+        break;
+      // Add more cases for other meditation IDs as necessary
+      default:
+        // Handle cases for other meditations or show an error message
+        break;
+    }
   }
 
   Widget buildMeditationItem(BuildContext context, Meditation meditation) {
     return GestureDetector(
       onTap: () {
-        navigateToMeditation(context, meditation.id);
+        showDurationSelection(context, meditation.id);
       },
       child: Container(
         margin: const EdgeInsets.all(8.0),

@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'animals_data.dart'; // Import your AnimalData class and animalsData list
-import 'common_buttons.dart'; // Import your CommonButtons widget
-import 'common_buttons_animals.dart'; // Import your CommonAnimalButtons widget
+import 'animals_data.dart';
+import 'common_buttons.dart';
+import 'common_buttons_animals.dart';
 
-class SleepPage extends StatelessWidget {
+class SleepPage extends StatefulWidget {
   final String animalName;
 
   const SleepPage({Key? key, required this.animalName}) : super(key: key);
 
-  AnimalData? findAnimalData() {
-    try {
-      return animalsData.firstWhere(
-        (animal) => animal.name.toLowerCase() == animalName.toLowerCase(),
-      );
-    } catch (e) {
-      return null;
-    }
-  }
+  @override
+  _SleepPageState createState() => _SleepPageState();
+}
+
+class _SleepPageState extends State<SleepPage> {
+  bool isAnimalOnBed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,58 +21,84 @@ class SleepPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sleep Page'), // Update the title
+        title: const Text('Sleep Page'),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Stack(
           children: [
-            if (animalData != null)
-              Image.asset(
-                animalData
-                    .sleepImagePath, // Use the sleepImagePath for the image
-                width: 200,
-                height: 200,
-                fit: BoxFit.contain,
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.45,
+              right: 10,
+              child: DragTarget<String>(
+                builder: (BuildContext context, List<String?> candidateData,
+                    List<dynamic> rejectedData) {
+                  return Image.asset(
+                    'assets/images/icons/smile.png', // Replace with your bed image path
+                    width: 100,
+                    height: 100,
+                  );
+                },
+                onWillAccept: (data) => data == 'Animal',
+                onAccept: (data) {
+                  setState(() {
+                    isAnimalOnBed = true;
+                  });
+                },
               ),
-            // Add more widgets or content for the SleepPage
-            // Example: Text('Sleeping information'),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.4,
+              left: 10,
+              child: Draggable<String>(
+                data: 'Animal',
+                child: isAnimalOnBed
+                    ? SizedBox(
+                        width: 100,
+                        height: 100,
+                        child: Image.asset(
+                          animalData!.sleepImagePath,
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : Image.asset(
+                        animalData!.sleepImagePath,
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.contain,
+                      ),
+                feedback: Image.asset(
+                  animalData.sleepImagePath,
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.contain,
+                ),
+                childWhenDragging: Container(),
+              ),
+            ),
           ],
         ),
       ),
       floatingActionButton: CommonButtons(
-        onHomePressed: () {
-          // Implement logic for home button press
-        },
-        onSettingsPressed: () {
-          // Implement logic for settings button press
-        },
-        onHeartPressed: () {
-          // Implement logic for heart button press
-        },
-      ),
+          // Existing logic for common buttons
+          ),
       bottomNavigationBar: SizedBox(
         height: 80,
         child: CommonAnimalButtons(
-          onSleepPressed: () {
-            // Navigate back to the previous page (AnimalPage)
-            Navigator.pop(context);
-          },
-          onWashPressed: () {
-            // Implement wash action
-          },
-          onEatPressed: () {
-            // Implement eat action
-          },
-          onEduPressed: () {
-            // Implement education action
-          },
-          onPlayPressed: () {
-            // Implement play action
-          },
-        ),
+            // Existing logic for common animal buttons
+            ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
+  }
+
+  AnimalData? findAnimalData() {
+    try {
+      return animalsData.firstWhere(
+        (animal) =>
+            animal.name.toLowerCase() == widget.animalName.toLowerCase(),
+      );
+    } catch (e) {
+      return null;
+    }
   }
 }

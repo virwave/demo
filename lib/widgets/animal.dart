@@ -27,21 +27,29 @@ class AnimalPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(animalName),
       ),
-      body: Center(
-        child: animalData != null
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    animalData.imagePath,
-                    width: 100,
-                    height: 100,
-                  ),
-                  Text('Name: ${animalData.name}'),
-                  // Add more Text widgets for additional details if available
-                ],
-              )
-            : Text('Not found'),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(animalData?.backgroundImagePath ?? ''),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Center(
+          child: animalData != null
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      animalData.imagePath,
+                      width: 100,
+                      height: 100,
+                    ),
+                    Text('Name: ${animalData.name}'),
+                    // Add more Text widgets for additional details if available
+                  ],
+                )
+              : Text('Not found'),
+        ),
       ),
       floatingActionButton: CommonButtons(
         onHomePressed: () {
