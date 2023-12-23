@@ -17,21 +17,21 @@ class Meditation {
 class MeditationsData {
   static List<Meditation> meditations = [
     Meditation(
-      id: 1,
+      id: 0,
       title: 'Meditation 0',
       imageUrl: 'assets/images/icons/smile.png',
       description: 'Description for Emotions...',
       content: 'assets/videos/meditation1.mp4',
     ),
     Meditation(
-      id: 2,
+      id: 1,
       title: 'Meditation 1',
       imageUrl: 'assets/images/icons/smile.png',
       description: 'Description for Meditation 1...',
       content: 'assets/videos/meditation1.mp4',
     ),
     Meditation(
-      id: 3,
+      id: 2,
       title: 'Meditation 2',
       imageUrl: 'assets/images/icons/smile.png',
       description: 'Description for Meditation 2...',

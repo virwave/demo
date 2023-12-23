@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class Meditation1Page extends StatefulWidget {
-  const Meditation1Page({Key? key}) : super(key: key);
+  const Meditation1Page({Key? key, required int meditationId})
+      : super(key: key);
 
   @override
   _Meditation1PageState createState() => _Meditation1PageState();
@@ -11,6 +12,7 @@ class Meditation1Page extends StatefulWidget {
 class _Meditation1PageState extends State<Meditation1Page> {
   late VideoPlayerController _controller;
   bool _videoStarted = false;
+  Offset _virwavePosition = Offset(0, 0);
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _Meditation1PageState extends State<Meditation1Page> {
       ),
       body: Stack(
         children: [
+          // Video Player
           Center(
             child: _controller.value.isInitialized
                 ? AspectRatio(
@@ -44,20 +47,32 @@ class _Meditation1PageState extends State<Meditation1Page> {
                   )
                 : const CircularProgressIndicator(),
           ),
-          if (!_videoStarted)
-            Draggable(
+
+          // Logo Positioned Over Video
+          Positioned(
+            left: _virwavePosition.dx,
+            top: _virwavePosition.dy,
+            child: Draggable(
               feedback: Image.asset('assets/images/icons/virwave_logo.png',
                   width: 100, height: 100),
               child: Image.asset('assets/images/icons/virwave_logo.png',
                   width: 100, height: 100),
-              onDragEnd: (details) async {
-                await Future.delayed(Duration(milliseconds: 300));
+              onDragEnd: (details) {
                 setState(() {
-                  _videoStarted = true;
-                  _controller.play();
+                  _virwavePosition = details.offset;
+                });
+                // Start the video after a delay once the logo is moved
+                Future.delayed(Duration(milliseconds: 300), () {
+                  if (!_videoStarted) {
+                    setState(() {
+                      _videoStarted = true;
+                      _controller.play();
+                    });
+                  }
                 });
               },
             ),
+          ),
         ],
       ),
     );

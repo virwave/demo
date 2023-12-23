@@ -1,17 +1,51 @@
 import 'package:flutter/material.dart';
-import 'meditations_data.dart'; // Import the meditations data file
+import 'duration_selection.dart';
+import 'meditations_data.dart';
 
 class MeditationsPage extends StatelessWidget {
   const MeditationsPage({Key? key}) : super(key: key);
 
-  void navigateToMeditation(BuildContext context, int meditationId) {
-    Navigator.pushNamed(context, '/meditation_$meditationId');
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Meditations'),
+      ),
+      body: ListView(
+        children: MeditationsData.meditations
+            .map((meditation) => buildMeditationItem(context, meditation))
+            .toList(),
+      ),
+    );
+  }
+
+  void _showDurationPopup(BuildContext context, Meditation meditation) async {
+    Duration selectedDuration = Duration(seconds: 30);
+
+    final duration = await Navigator.push<Duration>(
+      context,
+      MaterialPageRoute(builder: (context) => DurationSelectionPage()),
+    );
+
+    if (duration != null) {
+      selectedDuration = duration;
+      _navigateWithDuration(context, meditation, selectedDuration);
+    }
+  }
+
+  void _navigateWithDuration(
+      BuildContext context, Meditation meditation, Duration duration) {
+    print(
+        'Selected Duration: ${duration.inSeconds} seconds for ${meditation.title}');
+    Navigator.pop(context);
+
+    navigateToMeditationPage(context, meditation.id, duration);
   }
 
   Widget buildMeditationItem(BuildContext context, Meditation meditation) {
     return GestureDetector(
       onTap: () {
-        navigateToMeditation(context, meditation.id);
+        _showDurationPopup(context, meditation);
       },
       child: Container(
         margin: const EdgeInsets.all(8.0),
@@ -39,51 +73,10 @@ class MeditationsPage extends StatelessWidget {
     );
   }
 
-  Widget buildMeditationShelf(
-      BuildContext context, List<Meditation> shelfMeditations) {
-    List<Widget> meditationItems = [];
-    for (int i = 0; i < shelfMeditations.length; i++) {
-      Meditation meditation = shelfMeditations[i];
-      meditationItems.add(buildMeditationItem(context, meditation));
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: meditationItems,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> shelves = [];
-    int numberOfShelves = (MeditationsData.meditations.length / 4).ceil();
-
-    for (int i = 0; i < numberOfShelves; i++) {
-      int start = i * 4;
-      int end = (i + 1) * 4;
-      if (end > MeditationsData.meditations.length) {
-        end = MeditationsData.meditations.length;
-      }
-      List<Meditation> shelfMeditations =
-          MeditationsData.meditations.sublist(start, end);
-      shelves.add(buildMeditationShelf(context, shelfMeditations));
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Meditations'),
-      ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: shelves,
-            ),
-          ),
-        ],
-      ),
-    );
+  void navigateToMeditationPage(
+      BuildContext context, int meditationId, Duration duration) {
+    // Replace with your logic to navigate to respective meditation pages based on IDs
+    String routeName = '/meditation_$meditationId';
+    Navigator.pushNamed(context, routeName, arguments: duration);
   }
 }

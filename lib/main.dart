@@ -14,6 +14,7 @@ import 'widgets/animal.dart';
 import 'widgets/sleep.dart';
 import 'widgets/eat.dart';
 import 'widgets/meditation1.dart'; // Import Meditation1Page
+import 'widgets/meditation2.dart'; // Import Meditation1Page
 
 void main() => runApp(const MyApp());
 
@@ -36,6 +37,8 @@ class MyApp extends StatelessWidget {
         '/guided_journals': (context) => const GuidedJournalsPage(),
         '/parental_controls': (context) => const ParentalControlsPage(),
         '/educational_content': (context) => const EducationalContentPage(),
+        '/meditation_1': (context) => const Meditation1Page(meditationId: 1),
+        '/meditation_2': (context) => const Meditation2Page(meditationId: 2),
         '/animal': (context) {
           final args = ModalRoute.of(context)!.settings.arguments
               as Map<String, dynamic>;
@@ -54,10 +57,6 @@ class MyApp extends StatelessWidget {
           final animalName = args['animalName'] as String;
           return EatPage(animalName: animalName);
         },
-        '/meditation_1': (context) =>
-            const Meditation1Page(), // Add route for Meditation1Page
-        // Add more routes as needed for other meditations
-        // '/meditation_2': (context) => const Meditation2Page(),
       },
     );
   }
