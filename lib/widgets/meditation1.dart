@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart'; // Import necessary packages
+import 'package:video_player/video_player.dart';
 
 class Meditation1Page extends StatefulWidget {
   const Meditation1Page({Key? key}) : super(key: key);
@@ -10,14 +10,14 @@ class Meditation1Page extends StatefulWidget {
 
 class _Meditation1PageState extends State<Meditation1Page> {
   late VideoPlayerController _controller;
+  bool _videoStarted = false;
 
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-      'assets/videos/meditation1.mp4', // Replace with your actual video URL
+      'assets/videos/meditation1.mp4',
     )..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized
         setState(() {});
       });
   }
@@ -34,25 +34,31 @@ class _Meditation1PageState extends State<Meditation1Page> {
       appBar: AppBar(
         title: const Text('Meditation 1'),
       ),
-      body: Center(
-        child: _controller.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              )
-            : const CircularProgressIndicator(), // Show a loading indicator while initializing
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _controller.value.isPlaying
-                ? _controller.pause()
-                : _controller.play();
-          });
-        },
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-        ),
+      body: Stack(
+        children: [
+          Center(
+            child: _controller.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  )
+                : const CircularProgressIndicator(),
+          ),
+          if (!_videoStarted)
+            Draggable(
+              feedback: Image.asset('assets/images/icons/virwave_logo.png',
+                  width: 100, height: 100),
+              child: Image.asset('assets/images/icons/virwave_logo.png',
+                  width: 100, height: 100),
+              onDragEnd: (details) async {
+                await Future.delayed(Duration(milliseconds: 300));
+                setState(() {
+                  _videoStarted = true;
+                  _controller.play();
+                });
+              },
+            ),
+        ],
       ),
     );
   }

@@ -13,7 +13,7 @@ import 'educational_content_page.dart';
 import 'widgets/animal.dart';
 import 'widgets/sleep.dart';
 import 'widgets/eat.dart';
-import 'widgets/meditation1.dart'; // Updated import for Meditation1Screen
+import 'widgets/meditation1.dart'; // Import Meditation1Page
 
 void main() => runApp(const MyApp());
 
@@ -54,10 +54,10 @@ class MyApp extends StatelessWidget {
           final animalName = args['animalName'] as String;
           return EatPage(animalName: animalName);
         },
-        // Update the route for Meditation 1 to match the correct class name
-        '/meditation1': (context) => const Meditation1Page(),
+        '/meditation_1': (context) =>
+            const Meditation1Page(), // Add route for Meditation1Page
         // Add more routes as needed for other meditations
-        // '/meditation_2': (context) => const Meditation2Screen(),
+        // '/meditation_2': (context) => const Meditation2Page(),
       },
     );
   }
