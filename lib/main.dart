@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'authentication/login.dart';
+import 'widgets/animal.dart';
 import 'widgets/world_map.dart';
 import 'widgets/ocean_wave.dart';
 import 'profile_page.dart';
 import 'settings_page.dart';
-import 'widgets/meditations.dart'; // Updated import for MeditationsPage
+import 'widgets/meditations.dart';
 import 'games_page.dart';
 import 'progress_tracker_page.dart';
 import 'guided_journals_page.dart';
 import 'parental_controls_page.dart';
 import 'educational_content_page.dart';
-import 'widgets/animal.dart';
-import 'widgets/sleep.dart';
-import 'widgets/eat.dart';
-import 'widgets/meditation1.dart'; // Import Meditation1Page
-import 'widgets/meditation2.dart'; // Import Meditation1Page
+import 'widgets/meditation1.dart';
+import 'widgets/meditation2.dart';
 
 void main() => runApp(const MyApp());
 
@@ -44,18 +42,6 @@ class MyApp extends StatelessWidget {
               as Map<String, dynamic>;
           final animalName = args['animalName'] as String;
           return AnimalPage(animalName: animalName);
-        },
-        '/sleep': (context) {
-          final args = ModalRoute.of(context)!.settings.arguments
-              as Map<String, dynamic>;
-          final animalName = args['animalName'] as String;
-          return SleepPage(animalName: animalName);
-        },
-        '/eat': (context) {
-          final args = ModalRoute.of(context)!.settings.arguments
-              as Map<String, dynamic>;
-          final animalName = args['animalName'] as String;
-          return EatPage(animalName: animalName);
         },
       },
     );

@@ -1,95 +1,120 @@
 import 'package:flutter/material.dart';
-import 'animals_data.dart'; // Import your AnimalData class and animalsData list
-import 'common_buttons.dart'; // Import your CommonButtons widget
-import 'common_buttons_animals.dart'; // Import your CommonAnimalButtons widget
-import 'sleep.dart'; // Import for SleepPage
+import 'animal_data.dart'; // Ensure this file has the AnimalData class
 
-class AnimalPage extends StatelessWidget {
+class AnimalPage extends StatefulWidget {
   final String animalName;
 
   const AnimalPage({Key? key, required this.animalName}) : super(key: key);
 
-  AnimalData? findAnimalData() {
-    try {
-      return animalsData.firstWhere(
-        (animal) => animal.name.toLowerCase() == animalName.toLowerCase(),
-      );
-    } catch (e) {
-      return null;
-    }
+  @override
+  _AnimalPageState createState() => _AnimalPageState();
+}
+
+class _AnimalPageState extends State<AnimalPage> {
+  late AnimalData animalData;
+  bool isSleeping = false;
+  String activityImage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    animalData = getAnimalData(widget.animalName);
+    activityImage = animalData.imagePath; // Default image
+  }
+
+  AnimalData getAnimalData(String name) {
+    return animalsData.firstWhere(
+      (animal) => animal.name.toLowerCase() == name.toLowerCase(),
+      orElse: () => AnimalData(
+        name: '',
+        imagePath: '',
+        sleepImagePath: '',
+        eatImagePath: '',
+        backgroundImagePath: '',
+        activities: [],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final AnimalData? animalData = findAnimalData();
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text(animalName),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(animalData?.backgroundImagePath ?? ''),
-            fit: BoxFit.cover,
+      appBar: AppBar(title: Text(animalData.name)),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 100.0),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isSleeping = !isSleeping;
+                      activityImage = isSleeping
+                          ? animalData.sleepImagePath
+                          : animalData.imagePath;
+                    });
+                  },
+                  child: Image.asset(
+                    activityImage,
+                    width: 150,
+                    height: 150,
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              ...animalData.activities.map((activity) {
+                return ActivityButton(
+                  label: activity,
+                  onPressed: () {
+                    setState(() {
+                      switch (activity) {
+                        case 'Sleep':
+                          isSleeping = !isSleeping;
+                          activityImage = isSleeping
+                              ? animalData.sleepImagePath
+                              : animalData.imagePath;
+                          break;
+                        case 'Wash':
+                          // Update for 'Wash' activity
+                          break;
+                        case 'Eat':
+                          // Update for 'Eat' activity
+                          break;
+                        case 'Edu':
+                          // Update for 'Edu' activity
+                          break;
+                        case 'Play':
+                          // Update for 'Play' activity
+                          break;
+                        default:
+                          break;
+                      }
+                    });
+                  },
+                );
+              }).toList(),
+            ],
           ),
         ),
-        child: Center(
-          child: animalData != null
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      animalData.imagePath,
-                      width: 100,
-                      height: 100,
-                    ),
-                    Text('Name: ${animalData.name}'),
-                    // Add more Text widgets for additional details if available
-                  ],
-                )
-              : Text('Not found'),
-        ),
       ),
-      floatingActionButton: CommonButtons(
-        onHomePressed: () {
-          // Implement logic for home button press
-        },
-        onSettingsPressed: () {
-          // Implement logic for settings button press
-        },
-        onHeartPressed: () {
-          // Implement logic for heart button press
-        },
-      ),
-      bottomNavigationBar: SizedBox(
-        height: 80, // Adjust the height as needed
-        child: CommonAnimalButtons(
-          onSleepPressed: () {
-            if (animalData != null) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SleepPage(animalName: animalData.name),
-                ),
-              );
-            }
-          },
-          onWashPressed: () {
-            // Implement wash action
-          },
-          onEatPressed: () {
-            // Implement eat action
-          },
-          onEduPressed: () {
-            // Implement education action
-          },
-          onPlayPressed: () {
-            // Implement play action
-          },
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    );
+  }
+}
+
+class ActivityButton extends StatelessWidget {
+  final String label;
+  final VoidCallback? onPressed;
+
+  const ActivityButton({Key? key, required this.label, this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(label),
     );
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CommonButtons extends StatelessWidget {
   final VoidCallback? onSettingsPressed;
   final VoidCallback? onHomePressed;
-  final VoidCallback? onHeartPressed; // Callback for pressing the heart icon
+  final VoidCallback? onHeartPressed;
 
   const CommonButtons({
     Key? key,
@@ -26,10 +26,8 @@ class CommonButtons extends StatelessWidget {
               height: 90,
             ),
             onPressed: () {
-              Navigator.pushNamed(
-                context,
-                '/meditations', // Route to the MeditationsPage
-              );
+              // Navigate to MeditationsPage
+              Navigator.pushNamed(context, '/meditations');
             },
           ),
         ),
@@ -42,10 +40,8 @@ class CommonButtons extends StatelessWidget {
               size: 90,
             ),
             onPressed: () {
-              Navigator.pushNamed(
-                context,
-                '/home', // Navigate to the WorldMap page
-              );
+              // Navigate to WorldMap page
+              Navigator.pushNamed(context, '/home');
             },
           ),
         ),
@@ -58,6 +54,7 @@ class CommonButtons extends StatelessWidget {
               size: 90,
             ),
             onPressed: () {
+              // Show settings dialog
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -66,11 +63,8 @@ class CommonButtons extends StatelessWidget {
                     content: SingleChildScrollView(
                       child: ListBody(
                         children: <Widget>[
-                          // Add your settings widgets here
-                          // Example:
                           Text('Setting 1'),
                           Text('Setting 2'),
-                          // Add more settings widgets as needed
                         ],
                       ),
                     ),
