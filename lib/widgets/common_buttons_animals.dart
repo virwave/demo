@@ -1,70 +1,47 @@
 import 'package:flutter/material.dart';
+import 'animal_data.dart'; // Ensure this file has the AnimalData class
 
-class CommonAnimalButtons extends StatelessWidget {
-  final VoidCallback? onSleepPressed;
-  final VoidCallback? onWashPressed;
-  final VoidCallback? onEatPressed;
-  final VoidCallback? onEduPressed;
-  final VoidCallback? onPlayPressed;
-  final bool isOnSleepPage;
+class AnimalActionsBar extends StatelessWidget {
+  final VoidCallback onSleep;
+  final VoidCallback onWash;
+  final VoidCallback onEat;
+  final VoidCallback onEdu;
+  final VoidCallback onPlay;
 
-  const CommonAnimalButtons({
+  const AnimalActionsBar({
     Key? key,
-    this.onSleepPressed,
-    this.onWashPressed,
-    this.onEatPressed,
-    this.onEduPressed,
-    this.onPlayPressed,
-    required this.isOnSleepPage,
+    required this.onSleep,
+    required this.onWash,
+    required this.onEat,
+    required this.onEdu,
+    required this.onPlay,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white, // Background color for the bottom buttons
-      padding: const EdgeInsets.symmetric(vertical: 10),
+    return BottomAppBar(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/sleep.png',
-              width: 60,
-              height: 60,
-            ),
-            onPressed: onSleepPressed,
+            icon: Icon(Icons.night_shelter),
+            onPressed: onSleep,
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/wash.png',
-              width: 60,
-              height: 60,
-            ),
-            onPressed: onWashPressed,
+            icon: Icon(Icons.shower),
+            onPressed: onWash,
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/eat.png',
-              width: 60,
-              height: 60,
-            ),
-            onPressed: onEatPressed,
+            icon: Icon(Icons.fastfood),
+            onPressed: onEat,
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/edu.png',
-              width: 60,
-              height: 60,
-            ),
-            onPressed: onEduPressed,
+            icon: Icon(Icons.school),
+            onPressed: onEdu,
           ),
           IconButton(
-            icon: Image.asset(
-              'assets/images/icons/play.png',
-              width: 60,
-              height: 60,
-            ),
-            onPressed: onPlayPressed,
+            icon: Icon(Icons.sports_soccer),
+            onPressed: onPlay,
           ),
         ],
       ),

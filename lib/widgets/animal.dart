@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'animal_data.dart'; // Ensure this file has the AnimalData class
+import 'animal_data.dart'; // Import your AnimalData class
 
 class AnimalPage extends StatefulWidget {
   final String animalName;
@@ -12,14 +12,12 @@ class AnimalPage extends StatefulWidget {
 
 class _AnimalPageState extends State<AnimalPage> {
   late AnimalData animalData;
-  bool isSleeping = false;
-  String activityImage = '';
+  String currentActivity = 'Default';
 
   @override
   void initState() {
     super.initState();
     animalData = getAnimalData(widget.animalName);
-    activityImage = animalData.imagePath; // Default image
   }
 
   AnimalData getAnimalData(String name) {
@@ -29,74 +27,83 @@ class _AnimalPageState extends State<AnimalPage> {
         name: '',
         imagePath: '',
         sleepImagePath: '',
+        washImagePath: '',
         eatImagePath: '',
+        eduImagePath: "",
+        playImagePath: "",
         backgroundImagePath: '',
         activities: [],
       ),
     );
   }
 
+  void setActivity(String activity) {
+    setState(() {
+      if (currentActivity == activity) {
+        // If the same button is pressed again, revert to default
+        currentActivity = 'Default';
+      } else {
+        currentActivity = activity;
+      }
+    });
+  }
+
+  String getActivityImage() {
+    switch (currentActivity) {
+      case 'Sleep':
+        return animalData.sleepImagePath;
+      case 'Wash':
+        return animalData.washImagePath;
+      case 'Eat':
+        return animalData.eatImagePath;
+      case 'Edu':
+        return animalData.eduImagePath;
+      case 'Play':
+        return animalData.playImagePath;
+      default:
+        return animalData.imagePath;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    String activityImage = getActivityImage();
+
     return Scaffold(
       appBar: AppBar(title: Text(animalData.name)),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 100.0),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isSleeping = !isSleeping;
-                      activityImage = isSleeping
-                          ? animalData.sleepImagePath
-                          : animalData.imagePath;
-                    });
-                  },
-                  child: Image.asset(
-                    activityImage,
-                    width: 150,
-                    height: 150,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              ...animalData.activities.map((activity) {
-                return ActivityButton(
-                  label: activity,
-                  onPressed: () {
-                    setState(() {
-                      switch (activity) {
-                        case 'Sleep':
-                          isSleeping = !isSleeping;
-                          activityImage = isSleeping
-                              ? animalData.sleepImagePath
-                              : animalData.imagePath;
-                          break;
-                        case 'Wash':
-                          // Update for 'Wash' activity
-                          break;
-                        case 'Eat':
-                          // Update for 'Eat' activity
-                          break;
-                        case 'Edu':
-                          // Update for 'Edu' activity
-                          break;
-                        case 'Play':
-                          // Update for 'Play' activity
-                          break;
-                        default:
-                          break;
-                      }
-                    });
-                  },
-                );
-              }).toList(),
-            ],
-          ),
+      body: Center(
+        child: Image.asset(
+          activityImage,
+          width: 150,
+          height: 150,
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ActivityButton(
+              onPressed: () => setActivity('Sleep'),
+              iconImage: Image.asset('assets/images/icons/sleep.png'),
+              iconSize: 40.0, // Adjust the size as needed
+            ),
+            ActivityButton(
+              label: 'Wash',
+              onPressed: () => setActivity('Wash'),
+            ),
+            ActivityButton(
+              label: 'Eat',
+              onPressed: () => setActivity('Eat'),
+            ),
+            ActivityButton(
+              label: 'Edu',
+              onPressed: () => setActivity('Edu'),
+            ),
+            ActivityButton(
+              label: 'Play',
+              onPressed: () => setActivity('Play'),
+            ),
+          ],
         ),
       ),
     );
@@ -104,17 +111,47 @@ class _AnimalPageState extends State<AnimalPage> {
 }
 
 class ActivityButton extends StatelessWidget {
-  final String label;
   final VoidCallback? onPressed;
+  final Image? iconImage;
+  final IconData? iconData;
+  final String? label;
+  final double iconSize;
 
-  const ActivityButton({Key? key, required this.label, this.onPressed})
-      : super(key: key);
+  const ActivityButton({
+    Key? key,
+    this.onPressed,
+    this.iconImage,
+    this.iconData,
+    this.label,
+    this.iconSize = 24.0, // Default size for icons
+  })  : assert(
+            (iconImage != null ? 1 : 0) +
+                    (iconData != null ? 1 : 0) +
+                    (label != null ? 1 : 0) ==
+                1,
+            'Only one of iconImage, iconData, or label should be provided.'),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Widget buttonChild;
+    if (iconImage != null) {
+      buttonChild = SizedBox(
+        width: iconSize,
+        height: iconSize,
+        child: iconImage,
+      );
+    } else if (iconData != null) {
+      buttonChild = Icon(iconData, size: iconSize);
+    } else if (label != null) {
+      buttonChild = Text(label!);
+    } else {
+      throw ArgumentError('An icon, image, or label must be provided');
+    }
+
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(label),
+      child: buttonChild,
     );
   }
 }
