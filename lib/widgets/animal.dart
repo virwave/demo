@@ -1,5 +1,9 @@
+// animal.dart
+
 import 'package:flutter/material.dart';
 import 'animal_data.dart'; // Import your AnimalData class
+import 'axolotl_play.dart'; // Import the AxolotlPlayPage
+import 'activity_util.dart'; // Import the ActivityUtil
 
 class AnimalPage extends StatefulWidget {
   final String animalName;
@@ -32,7 +36,6 @@ class _AnimalPageState extends State<AnimalPage> {
         eduImagePath: "",
         playImagePath: "",
         backgroundImagePath: '',
-        activities: [],
       ),
     );
   }
@@ -68,90 +71,58 @@ class _AnimalPageState extends State<AnimalPage> {
   @override
   Widget build(BuildContext context) {
     String activityImage = getActivityImage();
+    String backgroundImage =
+        animalData.backgroundImagePath; // Get the background image path
 
     return Scaffold(
       appBar: AppBar(title: Text(animalData.name)),
-      body: Center(
-        child: Image.asset(
-          activityImage,
-          width: 150,
-          height: 150,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(backgroundImage), // Use the background image path
+            fit: BoxFit.cover, // Adjust the fit as needed
+          ),
+        ),
+        child: Center(
+          child: Image.asset(
+            activityImage,
+            width: 150,
+            height: 150,
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            ActivityButton(
-              onPressed: () => setActivity('Sleep'),
-              iconImage: Image.asset('assets/images/icons/sleep.png'),
-              iconSize: 40.0, // Adjust the size as needed
+            ElevatedButton(
+              onPressed: () =>
+                  ActivityUtil.handleActivity(context, 'Sleep', animalData),
+              child: Text('Sleep'), // Replace with icon or label
             ),
-            ActivityButton(
-              label: 'Wash',
-              onPressed: () => setActivity('Wash'),
+            ElevatedButton(
+              onPressed: () =>
+                  ActivityUtil.handleActivity(context, 'Wash', animalData),
+              child: Text('Wash'), // Replace with icon or label
             ),
-            ActivityButton(
-              label: 'Eat',
-              onPressed: () => setActivity('Eat'),
+            ElevatedButton(
+              onPressed: () =>
+                  ActivityUtil.handleActivity(context, 'Eat', animalData),
+              child: Text('Eat'), // Replace with icon or label
             ),
-            ActivityButton(
-              label: 'Edu',
-              onPressed: () => setActivity('Edu'),
+            ElevatedButton(
+              onPressed: () =>
+                  ActivityUtil.handleActivity(context, 'Edu', animalData),
+              child: Text('Edu'), // Replace with icon or label
             ),
-            ActivityButton(
-              label: 'Play',
-              onPressed: () => setActivity('Play'),
+            ElevatedButton(
+              onPressed: () =>
+                  ActivityUtil.handleActivity(context, 'Play', animalData),
+              child: Text('Play'), // Replace with icon or label
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class ActivityButton extends StatelessWidget {
-  final VoidCallback? onPressed;
-  final Image? iconImage;
-  final IconData? iconData;
-  final String? label;
-  final double iconSize;
-
-  const ActivityButton({
-    Key? key,
-    this.onPressed,
-    this.iconImage,
-    this.iconData,
-    this.label,
-    this.iconSize = 24.0, // Default size for icons
-  })  : assert(
-            (iconImage != null ? 1 : 0) +
-                    (iconData != null ? 1 : 0) +
-                    (label != null ? 1 : 0) ==
-                1,
-            'Only one of iconImage, iconData, or label should be provided.'),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Widget buttonChild;
-    if (iconImage != null) {
-      buttonChild = SizedBox(
-        width: iconSize,
-        height: iconSize,
-        child: iconImage,
-      );
-    } else if (iconData != null) {
-      buttonChild = Icon(iconData, size: iconSize);
-    } else if (label != null) {
-      buttonChild = Text(label!);
-    } else {
-      throw ArgumentError('An icon, image, or label must be provided');
-    }
-
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: buttonChild,
     );
   }
 }

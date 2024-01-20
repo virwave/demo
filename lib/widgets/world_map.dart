@@ -57,6 +57,20 @@ class WorldMap extends StatelessWidget {
                     ),
                   ),
                 ),
+                Positioned(
+                  left: MediaQuery.of(context).size.width * 0.5 - 15,
+                  top: MediaQuery.of(context).size.height * 0.4 - 15,
+                  child: GestureDetector(
+                    onTap: () {
+                      navigateToAnimalPage(context, 'Cheetah');
+                    },
+                    child: Image.asset(
+                      'assets/images/animals/animal/cheetah.png',
+                      width: 30,
+                      height: 30,
+                    ),
+                  ),
+                ),
                 // Add more animal images as needed
               ],
             ),
