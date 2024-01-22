@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'animal_data.dart'; // Import your AnimalData class
-import 'axolotl_play.dart'; // Import the AxolotlPlayPage
 import 'activity_util.dart'; // Import the ActivityUtil
 
 class AnimalPage extends StatefulWidget {

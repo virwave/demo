@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'animal_data.dart'; // Import your AnimalData class
+import 'dart:async';
+import 'dart:math';
+import 'package:flutter_virwave/widgets/animal_data.dart' as VirwaveAnimalData;
 
 class AxolotlPlayPage extends StatefulWidget {
-  final AnimalData animalData;
+  final VirwaveAnimalData.AnimalData animalData;
 
   const AxolotlPlayPage({Key? key, required this.animalData}) : super(key: key);
 
@@ -12,10 +14,34 @@ class AxolotlPlayPage extends StatefulWidget {
 
 class _AxolotlPlayPageState extends State<AxolotlPlayPage> {
   int score = 0; // Variable to keep track of the player's score
+  List<Offset> bubbles = [];
+  final _random = Random();
+
+  @override
+  void initState() {
+    super.initState();
+    _startGeneratingBubbles();
+  }
+
+  void _startGeneratingBubbles() {
+    const duration = const Duration(seconds: 2);
+    Timer.periodic(duration, (timer) {
+      setState(() {
+        bubbles.add(_getRandomPosition());
+      });
+    });
+  }
+
+  Offset _getRandomPosition() {
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    final double randomX = _random.nextDouble() * screenWidth;
+
+    return Offset(randomX, 0); // Start at the top of the screen
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Build the UI and functionality specific to the Axolotl's play game
     return Scaffold(
       appBar: AppBar(title: Text(widget.animalData.name + ' Play Game')),
       body: Center(
@@ -32,26 +58,41 @@ class _AxolotlPlayPageState extends State<AxolotlPlayPage> {
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(height: 20),
-            // Game UI elements (e.g., bubbles to pop)
-            GestureDetector(
-              onTap: () {
-                // When a bubble is tapped, increase the score
-                setState(() {
-                  score += 10;
-                });
-              },
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Center(
-                  child: Text(
-                    'Bubble',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
+            // Display the bubbles on the screen
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  // Implement bubble popping logic here (remove the bubble)
+                  setState(() {
+                    bubbles.removeWhere((bubble) {
+                      double bubbleTop = bubble.dy;
+                      double bubbleBottom = bubble.dy + 50; // Bubble height
+                      bool popped =
+                          bubbleBottom >= MediaQuery.of(context).size.height;
+                      if (popped) {
+                        score +=
+                            10; // Increase the score when a bubble is popped
+                      }
+                      return popped;
+                    });
+                  });
+                },
+                child: Stack(
+                  children: [
+                    for (var bubblePosition in bubbles)
+                      Positioned(
+                        left: bubblePosition.dx,
+                        top: bubblePosition.dy,
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ),
